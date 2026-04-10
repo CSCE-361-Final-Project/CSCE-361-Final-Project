@@ -1,0 +1,52 @@
+/* checkout.css */
+
+.checkout-container {
+    max-width: 700px; /* Làm form hẹp lại để dễ nhìn */
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.checkout-section {
+    margin-bottom: 40px;
+}
+
+.checkout-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+}
+
+/* Style cho tất cả các ô input trong form */
+input[type="text"], 
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Hàng ngang cho City/Zip hoặc Exp/CVV */
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-submit-order {
+    width: 100%;
+    padding: 18px;
+    background: #28a745; /* Màu xanh lá cho nút thanh toán */
+    color: white;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.btn-submit-order:hover {
+    background: #218838;
+}

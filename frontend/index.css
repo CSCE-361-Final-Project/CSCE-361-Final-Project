@@ -9,7 +9,7 @@
 }
 
 body {
-    min-height: 200vh; /* Làm trang dài ra để cuộn theo yêu cầu layout */
+    min-height: 200vh; 
     line-height: 1.6;
     background-color: #ffffff;
 }
@@ -82,7 +82,6 @@ body {
     outline: none;
 }
 
-/* Naming: [Chức năng]--[Vị trí]--[Chi tiết] */
 .btn--header--search-submit {
     background: transparent;
     border: none;
