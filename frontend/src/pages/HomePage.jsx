@@ -3,6 +3,7 @@ import '../styles/homepage.css';
 import ProductCard from '../components/ProductCard';
 
 
+
 // Dữ liệu tạm thời - sau này backend sẽ cung cấp dựa theo database của bạn
 const sampleProducts = [
   { id: 1, name: "Sample Product 1", category: "Product Catalog", price: "120.00", oldPrice: "150.00", sku: "AB12345", image: "https://via.placeholder.com/300", onSale: true },
@@ -13,7 +14,7 @@ const sampleProducts = [
   { id: 6, name: "Sample Product 6", category: "Product Catalog", price: "45.00", oldPrice: null,     sku: "AB12350", image: "https://via.placeholder.com/300", onSale: false },
 ];
 
-export default function HomePage({ setPage }) {
+export default function HomePage({ setPage , setSelectedProduct }) {
   return (
     <main className="main-content">
       {/* Hero Section */}
@@ -33,7 +34,12 @@ export default function HomePage({ setPage }) {
         <h3 className="catalog__title">NEW ARRIVALS</h3>
         <div className="catalog__grid">
           {sampleProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard 
+            key={product.id} 
+            product={product}
+            setPage={setPage}
+            setSelectedProduct={setSelectedProduct} 
+            />
           ))}
         </div>
       </section>

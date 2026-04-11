@@ -12,14 +12,14 @@ export default function Header({ page, setPage, cartCount }) {
         </div>
         <ul className="header__nav-menu">
           <li><a href="#" className="header__nav-link" onClick={() => setPage('home')}>OUR PRODUCTS</a></li>
-          <li><a href="#" className="header__nav-link header__nav-link--sale">SALE</a></li>
+          <li><a href="#" className="header__nav-link header__nav-link--sale" onClick={(e) => { e.preventDefault(); setPage('sale'); }}>SALE</a></li>
         </ul>
         <div className="header__actions">
           <div className="search-bar">
             <input type="text" className="search-bar__input" placeholder="Search..." />
             <button>🔍</button>
           </div>
-          <span className="header__icon">👤</span>
+          <span className="header__icon" onClick={() => setPage('auth')} style={{ cursor: 'pointer' }}>👤</span>
           <div className="cart-status" onClick={() => setPage('cart')} style={{ cursor: 'pointer' }}>
             <span className="header__icon">🛒</span>
             <span className="cart-status__badge">{cartCount}</span>
