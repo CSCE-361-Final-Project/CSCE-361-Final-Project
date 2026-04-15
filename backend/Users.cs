@@ -15,10 +15,15 @@ public class Users {
 
     }
 
-/*
-https://dev.to/clover_luo/building-a-user-registration-system-in-net-core-c-ogg
-*/
-    public void createAccount(string email, string password){
-        
+
+    public void createAccount(String email, String password){
+        string query = "INSERT INTO users (email, password) VALUES (@Email, @Password)";
+        using (DatabaseConnection db = new DatabaseConnection()){
+            using (SqlCommand command = new SqlCommand(query, db.OpenConnection())){
+                command.Parameters.AddWithValue("@Email", email);
+                command.Parameters.AddWithValue("@Password", password);
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }
