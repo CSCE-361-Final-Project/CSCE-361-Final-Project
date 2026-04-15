@@ -1,54 +1,56 @@
 CREATE Table users (
-	userID int PRIMARY KEY,
-	email varchar(255),
-	password varchar(255)
+	userID int IDENTITY(1,1) PRIMARY KEY,
+	email varchar(255) NOT NULL,
+	password varchar(255) NOT NULL
 );
 
 CREATE Table category (
-	categoryID int PRIMARY KEY,
-	name varchar(255)
+	categoryID int IDENTITY(1,1) PRIMARY KEY,
+	name varchar(255) NOT NULL
 );
 
 CREATE Table product (
-	productID int PRIMARY KEY,
-	sku varchar(50) unique,
-	name varchar(255),
-	description TEXT,
-	manufacturer varchar(255),
-	weight int,
-	rating int,
-	dimensions varchar(50),
-	price decimal(10, 2),
-	categoryID int,
-	-- you need an image one as well
+	productID int IDENTITY(1,1) PRIMARY KEY,
+	sku varchar(50) UNIQUE NOT NULL,
+	name varchar(255) NOT NULL,
+	description TEXT NOT NULL,
+	manufacturer varchar(255) NOT NULL,
+	weight int NOT NULL,
+	rating int NOT NULL,
+	dimensions varchar(50) NOT NULL,
+	price decimal(10, 2) NOT NULL,
+	categoryID int NOT NULL,
+	imageUrl NVARCHAR(2048) NOT NULL,
+	-- imageURL design was prompted using Google's Gemini 3.1 Pro 
+	-- with the prompt "how would I store an image in an SQL database"
 	FOREIGN KEY (categoryID) references category(categoryID)
 );
 
 CREATE Table cart (
-	cartID int PRIMARY KEY,
-	userID int,
-	productID int,
-	quantity int,
+	cartID int IDENTITY(1,1) PRIMARY KEY,
+	userID int NOT NULL,
+	productID int NOT NULL,
+	quantity int NOT NULL,
 	FOREIGN KEY (userID) references Users(userID),
 	FOREIGN KEY (productID) references product(productID)
 );
 
 CREATE Table Sale (
-	saleID int PRIMARY KEY,
-	startDate DATETIME,
-	endDATE DATETIME,
-	amount decimal(10, 2),
-	categoryID int,
-	productID int,
+	saleID int IDENTITY(1,1) PRIMARY KEY,
+	startDate DATETIME NOT NULL,
+	endDATE DATETIME NOT NULL,
+	amount decimal(10, 2) NOT NULL,
+	categoryID int NOT NULL,
+	productID int NOT NULL,
 	FOREIGN KEY (categoryID) references category(categoryID),
 	FOREIGN KEY (productID) references product(productID)
 );
 
 CREATE Table Orders (
-	orderID int PRIMARY KEY,
-	userID int,
-	total decimal(10, 2),
-	orderDate DATETIME,
-	shippingDetails varchar(255)
+	orderID int IDENTITY(1,1) PRIMARY KEY,
+	userID int NOT NULL,
+	total decimal(10, 2) NOT NULL,
+	orderDate DATETIME NOT NULL,
+	shippingDetails varchar(255) NOT NULL,
 	FOREIGN KEY (userID) references users(userID)
 );
