@@ -46,7 +46,6 @@ public class Order {
                     command.ExecuteNonQuery();
                 }
             }
-                }
             } catch (SqlException e) {
                 Console.WriteLine(e.Message);
             }
@@ -54,5 +53,4 @@ public class Order {
         }
 
     }
-
 }

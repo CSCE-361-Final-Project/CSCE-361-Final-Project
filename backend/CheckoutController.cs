@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 [ApiController]
 [Route("[controller]")]
 
-public class CheckoutController : ControllerBase {
+public class CheckoutController : Controller {
     [HttpPost]
     public ActionResult Checkout([FromBody] CheckoutRequest request) {
         try {
@@ -15,7 +15,7 @@ public class CheckoutController : ControllerBase {
             }
 
             Order newOrder = userCart.Checkout(request.ShippingDetails, request.PaymentDetails);
-            ClearUserCartInDatabase(userCart.cartID);
+            ClearUserCartInDatabase(request.UserId);
 
             return RedirectToAction("OrderConfirmation", "Order", new { orderId = newOrder.orderID });
         } catch (Exception e) {
@@ -45,10 +45,8 @@ public class CheckoutController : ControllerBase {
             string query = @"SELECT c.quantity, p.productID, p.name, p.price, p.description, p.weight, p.dimensions, p.manufacturer, p.rating, p.sku, p.categoryID, p.imageUrl FROM cart c JOIN product p ON c.productID = p.productID WHERE c.userID = @userID";
             using (SqlCommand command = new SqlCommand(query, conn)){
                 command.Parameters.AddWithValue("@userID", userId);
-                using (SqlCommand command = new SqlCommand(query, conn)){
-                    command.Parameters.AddWithValue("@userID, userId");
-                    using (SqlDataReader reader = ccommand.ExecuteReader()){
-                        while(reader.Read()){
+                using (SqlDataReader reader = command.ExecuteReader()){
+                    while(reader.Read()){
                             string description = reader.GetString(reader.GetOrdinal("description"));
                             double weight = Convert.ToDouble(reader["weight"]);
                             string dimensions = reader.GetString(reader.GetOrdinal("dimensions"));
@@ -73,13 +71,11 @@ public class CheckoutController : ControllerBase {
                 }
             }
             return cart;
-        }
-        
     }
 
     private void ClearUserCartInDatabase(int userId){
         using (DatabaseConnection database = new DatabaseConnection()){
-            SqlConnection connection = database.OpenConnection();
+            SqlConnection conn = database.OpenConnection();
             string query = "DELETE FROM cart WHERE userID = @userID";
             using (SqlCommand command = new SqlCommand(query, conn)){
                 command.Parameters.AddWithValue("@userID", userId);
