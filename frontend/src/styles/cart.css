@@ -17,9 +17,9 @@
     align-items: flex-start;
 }
 
-/* Bên trái: Danh sách sản phẩm */
+/* Left: Item list */
 .cart-items {
-    flex: 2; /* Chiếm 2 phần diện tích */
+    flex: 2;
 }
 
 .cart-item {
@@ -49,9 +49,9 @@
     color: #ccc;
 }
 
-/* Bên phải: Tóm tắt đơn hàng */
+/* Right: Order summary */
 .cart-summary {
-    flex: 1; /* Chiếm 1 phần diện tích */
+    flex: 1;
     background: #f9f9f9;
     padding: 25px;
     border-radius: 4px;

@@ -16,7 +16,7 @@ body {
 
 /* ==========================================================================
    PART: HEADER SECTION
-   Gồm: Topbar, Navbar, Menu, Search, User Tools
+   Include: Topbar, Navbar, Menu, Search, User Tools
    ========================================================================== */
 .header {
     position: sticky;
@@ -67,7 +67,7 @@ body {
     color: #ff0000; /* Requirement: Highlight sales [cite: 24] */
 }
 
-/* SEARCH COMPONENT TRONG HEADER */
+/* SEARCH COMPONENT IN HEADER */
 .search-bar {
     display: flex;
     align-items: center;

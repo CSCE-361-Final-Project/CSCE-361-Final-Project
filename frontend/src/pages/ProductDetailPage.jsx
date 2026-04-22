@@ -9,7 +9,7 @@ export default function ProductDetailPage({ product, setPage, addToCart }) {
         window.scrollTo(0, 0);  
     }, []);
 
-    // Dữ liệu tạm - sau này backend sẽ truyền vào
+    // sample data - after implemeted backend put in data here
     const sampleProduct = product || {
         name: "Sample Product",
         manufacturer: "Sample Company",

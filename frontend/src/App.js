@@ -8,6 +8,7 @@ import AuthPage from './pages/AuthPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SalePage from './pages/SalePage';
 import SearchPage from './pages/SearchPage';
+import CategoryPage from './pages/CategoryPage';
 
 export default function App() {
   const [page, setPage] = useState('home');
@@ -110,6 +111,7 @@ export default function App() {
       {page === 'product' && <ProductDetailPage product={selectedProduct} setPage={setPage} addToCart={addToCart} />}
       {page === 'checkout' && <CheckoutPage setPage={setPage} clearCart={clearCart} />}
       {page !== 'checkout' && <Footer />}
+      {page === 'category' && <CategoryPage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
     </>
   );
 }

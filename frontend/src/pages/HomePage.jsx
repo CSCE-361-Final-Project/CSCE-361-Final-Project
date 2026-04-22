@@ -4,7 +4,7 @@ import ProductCard from '../components/ProductCard';
 
 
 
-// Dữ liệu tạm thời - sau này backend sẽ cung cấp dựa theo database của bạn
+// sample data - after implemeted backend put in data here
 const sampleProducts = [
   { id: 1, name: "Sample Product 1", category: "Product Catalog", price: "120.00", oldPrice: "150.00", sku: "AB12345", image: "https://via.placeholder.com/300", onSale: true },
   { id: 2, name: "Sample Product 2", category: "Product Catalog", price: "80.00", oldPrice: null,     sku: "AB12346", image: "https://via.placeholder.com/300", onSale: false },

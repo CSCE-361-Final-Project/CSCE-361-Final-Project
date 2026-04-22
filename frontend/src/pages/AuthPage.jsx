@@ -11,7 +11,7 @@ export default function AuthPage({ setPage, setCurrentUserId }) {
     const handleSubmit = () => {
         setError('');
 
-        // Validation cơ bản
+        // basic Validation 
         if (!email || !password) {
             setError('Please fill in all fields.');
             return;

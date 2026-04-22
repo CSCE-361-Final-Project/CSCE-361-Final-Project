@@ -3,7 +3,7 @@ import '../styles/sale.css';
 import '../styles/homepage.css';
 import ProductCard from '../components/ProductCard';
 
-// Dữ liệu tạm - sau này backend trả về từ bảng Sale trong database
+// sample data - after implemeted backend put in data here
 const saleData = [
     {
         saleID: 1,
@@ -46,7 +46,7 @@ export default function SalePage({ setPage, setSelectedProduct }) {
                 <div className="sale-badge-big">UP TO 20% OFF</div>
             </div>
 
-            {/* Sale theo từng category — giống bảng Sale trong database */}
+            {/* Sale based on category — similar to Sale in database */}
             {saleData.map(sale => (
                 <section key={sale.saleID} className="sale-section">
                     <h2 className="sale-section__title">{sale.category}</h2>

@@ -1,5 +1,5 @@
 // src/services/api.js
-// ĐỂ ĐỒNG ĐỘI BACKEND: Chỉ cần đổi API_URL thành URL server của bạn
+// BACKEND: change API_URL to URL of server 
 const API_URL = 'http://localhost:8080';
 
 // ==================== AUTH ====================
