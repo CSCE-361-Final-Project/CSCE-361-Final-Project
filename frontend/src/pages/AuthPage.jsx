@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import '../styles/auth.css';
 
-export default function AuthPage({ setPage, setCurrentUserId }) {
+export default function AuthPage({ setPage, setCurrentUserId, showNotification }) {
+
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -34,13 +35,13 @@ export default function AuthPage({ setPage, setCurrentUserId }) {
         })
             .then(response => {
                 if (!response.ok) {
-                    // If it's a 401 Unauthorized or 400 BadRequest
                     return response.json().then(err => { throw new Error(err.message || 'Login Failed'); });
                 }
                 return response.json();
             })
             .then(data => {
-                alert(data.message);
+                showNotification(data.message, "success");
+
                 if (data.userId) {
                     setCurrentUserId(data.userId);
                 }

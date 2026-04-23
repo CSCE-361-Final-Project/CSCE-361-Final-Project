@@ -1,39 +1,110 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/sale.css';
 import '../styles/homepage.css';
 import ProductCard from '../components/ProductCard';
 
-// Dữ liệu tạm - sau này backend trả về từ bảng Sale trong database
-const saleData = [
-    {
-        saleID: 1,
-        category: "Summer Collection",
-        discount: "20% OFF",
-        startDate: "2024-06-01",
-        endDate: "2024-06-30",
-        products: [
-            { id: 1, name: "Sample Product 1", category: "Summer Collection", price: "120.00", oldPrice: "150.00", sku: "AB12345", image: "https://via.placeholder.com/300", onSale: true },
-            { id: 2, name: "Sample Product 2", category: "Summer Collection", price: "80.00", oldPrice: "100.00", sku: "AB12346", image: "https://via.placeholder.com/300", onSale: true },
-            { id: 3, name: "Sample Product 3", category: "Summer Collection", price: "200.00", oldPrice: "250.00", sku: "AB12347", image: "https://via.placeholder.com/300", onSale: true },
-        ]
-    },
-    {
-        saleID: 2,
-        category: "Clearance",
-        discount: "$10 OFF",
-        startDate: "2024-06-15",
-        endDate: "2024-07-15",
-        products: [
-            { id: 4, name: "Sample Product 4", category: "Clearance", price: "60.00", oldPrice: "70.00", sku: "AB12348", image: "https://via.placeholder.com/300", onSale: true },
-            { id: 5, name: "Sample Product 5", category: "Clearance", price: "95.00", oldPrice: "105.00", sku: "AB12349", image: "https://via.placeholder.com/300", onSale: true },
-        ]
-    }
-];
+const Countdown = ({ endDate }) => {
+    const calculateTimeLeft = () => {
+        const difference = +new Date(endDate) - +new Date();
+        let timeLeft = {};
+
+        if (difference > 0) {
+            timeLeft = {
+                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                minutes: Math.floor((difference / 1000 / 60) % 60),
+                seconds: Math.floor((difference / 1000) % 60)
+            };
+        }
+        return timeLeft;
+    };
+
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setTimeLeft(calculateTimeLeft());
+        }, 1000);
+        return () => clearTimeout(timer);
+    });
+
+    const timerComponents = [];
+    Object.keys(timeLeft).forEach((interval) => {
+        if (!timeLeft[interval]) return;
+        timerComponents.push(
+            <span key={interval}>
+                {timeLeft[interval]} {interval}{" "}
+            </span>
+        );
+    });
+
+    return (
+        <div className="countdown">
+            {timerComponents.length ? (
+                <>Ends in: {timerComponents}</>
+            ) : (
+                <span>Sale Ended!</span>
+            )}
+        </div>
+    );
+};
 
 export default function SalePage({ setPage, setSelectedProduct }) {
+    const [sales, setSales] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         window.scrollTo(0, 0);
+
+
+        fetch('http://localhost:5000/product/categories')
+            .then(res => res.json())
+            .then(catData => {
+                setCategories(catData);
+
+                return fetch('http://localhost:5000/product/onSale')
+                    .then(res => res.json())
+                    .then(data => {
+                        const grouped = data.reduce((acc, item) => {
+                            const saleID = item.saleID;
+                            if (!acc[saleID]) {
+                                acc[saleID] = {
+                                    saleID: saleID,
+                                    startDate: item.startDate,
+                                    endDate: item.endDate,
+                                    discount: item.discountPercentage ? `${item.discountPercentage}% OFF` : `$${item.discountAmount} OFF`,
+                                    products: []
+                                };
+                            }
+                            acc[saleID].products.push({
+                                id: item.product.productID,
+                                productID: item.product.productID,
+                                name: item.product.name,
+                                price: item.salePrice.toFixed(2),
+                                oldPrice: item.product.price.toFixed(2),
+                                image: item.product.details.imageUrl,
+                                onSale: true,
+                                category: catData.find(c => c.categoryID === item.product.details.categoryID)?.name || "Sale Item",
+                                sku: item.product.details.sku,
+                                manufacturer: item.product.details.manufacturer,
+                                description: item.product.details.description,
+                                dimensions: item.product.details.dimensions,
+                                weight: `${item.product.details.weight} lbs`,
+                                rating: `${item.product.details.rating}/5`
+                            });
+                            return acc;
+                        }, {});
+                        setSales(Object.values(grouped));
+                        setLoading(false);
+                    });
+            })
+            .catch(err => {
+                console.error("Error fetching sales:", err);
+                setLoading(false);
+            });
     }, []);
+
 
     return (
         <div className="sale-page">
@@ -43,28 +114,36 @@ export default function SalePage({ setPage, setSelectedProduct }) {
                     <h1>SALE</h1>
                     <p>Limited time offers — don't miss out!</p>
                 </div>
-                <div className="sale-badge-big">UP TO 20% OFF</div>
+                <div className="sale-badge-big">SAVE BIG</div>
             </div>
 
-            {/* Sale theo từng category — giống bảng Sale trong database */}
-            {saleData.map(sale => (
-                <section key={sale.saleID} className="sale-section">
-                    <h2 className="sale-section__title">{sale.category}</h2>
-                    <p className="sale-section__meta">
-                        <span>{sale.discount}</span> · {sale.startDate} → {sale.endDate}
-                    </p>
-                    <div className="sale-grid">
-                        {sale.products.map(product => (
-                            <ProductCard
-                                key={product.id}
-                                product={product}
-                                setPage={setPage}
-                                setSelectedProduct={setSelectedProduct}
-                            />
-                        ))}
-                    </div>
-                </section>
-            ))}
+            {loading ? (
+                <p style={{ textAlign: 'center', padding: '50px' }}>Loading sales...</p>
+            ) : sales.length === 0 ? (
+                <p style={{ textAlign: 'center', padding: '50px' }}>No active sales right now. Check back soon!</p>
+            ) : (
+                sales.map(sale => (
+                    <section key={sale.saleID} className="sale-section">
+                        <div className="sale-section__header">
+                            <h2 className="sale-section__title">Sale #{sale.saleID} - {sale.discount}</h2>
+                            <div className="sale-section__dates">
+                                <span>{new Date(sale.startDate).toLocaleDateString()} → {new Date(sale.endDate).toLocaleDateString()}</span>
+                                <Countdown endDate={sale.endDate} />
+                            </div>
+                        </div>
+                        <div className="sale-grid">
+                            {sale.products.map(product => (
+                                <ProductCard
+                                    key={product.id}
+                                    product={product}
+                                    setPage={setPage}
+                                    setSelectedProduct={setSelectedProduct}
+                                />
+                            ))}
+                        </div>
+                    </section>
+                ))
+            )}
         </div>
     );
 }
