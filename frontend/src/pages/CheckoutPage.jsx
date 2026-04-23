@@ -1,7 +1,8 @@
 import '../styles/checkout.css';
 import { useState } from 'react';
 
-export default function CheckoutPage({ setPage, clearCart }) {
+export default function CheckoutPage({ setPage, clearCart, showNotification }) {
+
   const [fullName, setFullName] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
@@ -42,13 +43,15 @@ export default function CheckoutPage({ setPage, clearCart }) {
       });
 
       if (response.ok) {
-        alert('Order placed successfully!');
+        showNotification('Order placed successfully!', 'success');
         if (clearCart) clearCart();
+
         setPage('home');
       } else {
         console.error("Failed to Checkout");
-        alert('Checkout process failed, please double check your information')
+        showNotification('Checkout process failed, please double check your information', 'error');
       }
+
     } catch (error) {
       console.error('Error during checkout:', error);
     }
