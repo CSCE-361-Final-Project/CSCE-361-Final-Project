@@ -6,7 +6,7 @@ export default function ProductDetailPage({ product, setPage, addToCart }) {
 
 
     useEffect(() => {
-        window.scrollTo(0, 0);  
+        window.scrollTo(0, 0);
     }, []);
 
     // Dữ liệu tạm - sau này backend sẽ truyền vào
@@ -59,20 +59,20 @@ export default function ProductDetailPage({ product, setPage, addToCart }) {
                     </div>
 
                     <div className="actions">
-                        <input 
-                            type="number" 
-                            value={quantity} 
-                            min="1" 
+                        <input
+                            type="number"
+                            value={quantity}
+                            min="1"
                             onChange={(e) => setQuantity(e.target.value)}
                         />
                         <button className="btn-add-cart" onClick={() => {
                             addToCart(sampleProduct, quantity);
-                            alert(`${quantity} ${sampleProduct.name} added to cart!`);
                         }}>Add to Cart</button>
+
                     </div>
 
-                    <button 
-                        onClick={() => setPage('home')} 
+                    <button
+                        onClick={() => setPage('home')}
                         style={{ marginTop: '20px', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
                         ← Back to Products
                     </button>
