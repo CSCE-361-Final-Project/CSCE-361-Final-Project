@@ -10,6 +10,7 @@ import SalePage from './pages/SalePage';
 import SearchPage from './pages/SearchPage';
 import CatalogPage from './pages/CatalogPage';
 
+
 export default function App() {
   const [page, setPage] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -67,6 +68,7 @@ export default function App() {
       }
       return [...prev, { ...product, quantity: newQuantity, productID: productIDToUse }];
     });
+    alert(`${quantity} ${product.name} added to cart!`);
   };
 
   const updateQuantity = (skuOrId, quantity) => {

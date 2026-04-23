@@ -26,10 +26,10 @@ export default function Header({ page, setPage, cartCount, setSearchQuery }) {
         </ul>
         <div className="header__actions">
           <div className="search-bar">
-            <input 
-              type="text" 
-              className="search-bar__input" 
-              placeholder="Search..." 
+            <input
+              type="text"
+              className="search-bar__input"
+              placeholder="Search..."
               value={localQuery}
               onChange={(e) => setLocalQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
