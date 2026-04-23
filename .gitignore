@@ -3,5 +3,5 @@ settings.json
 backend/bin/
 backend/obj/
 frontend/node_modules/
-backend/obj
-backend/csproj
+Tests/obj/
+Tests/bin/
