@@ -12,6 +12,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-radius: 8px;
 }
 
 .sale-page__hero h1 {
@@ -27,32 +28,55 @@
 }
 
 .sale-badge-big {
-    background: red;
+    background: #ff3e3e;
     color: white;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 900;
-    padding: 20px 30px;
+    padding: 15px 25px;
+    transform: rotate(-3deg);
+    box-shadow: 5px 5px 0 rgba(255,255,255,0.2);
 }
 
 .sale-section {
-    margin-bottom: 50px;
+    margin-bottom: 60px;
+}
+
+.sale-section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 .sale-section__title {
-    font-size: 20px;
+    font-size: 24px;
+    font-weight: 900;
+    margin: 0;
+}
+
+.sale-section__dates {
+    text-align: right;
+    font-size: 14px;
+    color: #666;
+}
+
+.sale-section__dates span {
+    display: block;
+    font-weight: 600;
+    color: #333;
+}
+
+.countdown {
+    margin-top: 5px;
     font-weight: 800;
-    margin-bottom: 5px;
-}
-
-.sale-section__meta {
-    font-size: 13px;
-    color: #767677;
-    margin-bottom: 20px;
-}
-
-.sale-section__meta span {
-    color: red;
-    font-weight: bold;
+    color: #ff3e3e;
+    font-family: 'Courier New', Courier, monospace;
+    background: #fff0f0;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
 }
 
 .sale-grid {
@@ -61,4 +85,21 @@
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     padding-bottom: 15px;
+}
+
+.sale-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.sale-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.sale-grid::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.sale-grid::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

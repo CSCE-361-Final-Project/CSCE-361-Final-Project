@@ -106,11 +106,13 @@ public class ProductController : ControllerBase {
                             saleProducts.Add(new {
                                 product = product,
                                 saleID = Convert.ToInt32(reader["saleID"]),
-                                discountAmount = Math.Round(discount, 2),
+                                discountAmount = reader["discountAmount"] != DBNull.Value ? Math.Round(Convert.ToDouble(reader["discountAmount"]), 2) : (double?)null,
+                                discountPercentage = reader["discountPercentage"] != DBNull.Value ? Math.Round(Convert.ToDouble(reader["discountPercentage"]), 2) : (double?)null,
                                 salePrice = Math.Round(salePrice, 2),
                                 startDate = reader["startDate"].ToString(),
                                 endDate = reader["endDate"].ToString()
                             });
+
                         }
                     }
                 }
@@ -120,6 +122,31 @@ public class ProductController : ControllerBase {
             return BadRequest(new { message = "Database error", error = e.Message });
         }
     }
+
+    [HttpGet("saleDetails/{categoryID}")]
+    public ActionResult GetSaleDetails(int categoryID) {
+        try {
+            using (DatabaseConnection database = new DatabaseConnection()) {
+                SqlConnection conn = database.OpenConnection();
+                string query = "SELECT startDate, endDate FROM Sale WHERE categoryID = @categoryID AND startDate <= GETDATE() AND endDate >= GETDATE()";
+                using (SqlCommand command = new SqlCommand(query, conn)) {
+                    command.Parameters.Add("@categoryID", System.Data.SqlDbType.Int).Value = categoryID;
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        if (reader.Read()) {
+                            return Ok(new {
+                                startDate = Convert.ToDateTime(reader["startDate"]).ToShortDateString(),
+                                endDate = Convert.ToDateTime(reader["endDate"]).ToShortDateString()
+                            });
+                        }
+                    }
+                }
+            }
+            return NotFound();
+        } catch (SqlException e) {
+            return BadRequest(new { message = "Database error", error = e.Message });
+        }
+    }
+
 
     [HttpGet("search")]
     public ActionResult SearchProducts([FromQuery] string q) {
@@ -146,4 +173,51 @@ public class ProductController : ControllerBase {
             return BadRequest(new { message = "Database error", error = e.Message });
         }
     }
+
+    // GET /product/categories
+    [HttpGet("categories")]
+    public ActionResult GetCategories() {
+        List<object> categories = new List<object>();
+        try {
+            using (DatabaseConnection database = new DatabaseConnection()) {
+                SqlConnection conn = database.OpenConnection();
+                string query = "SELECT * FROM category";
+                using (SqlCommand command = new SqlCommand(query, conn)) {
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        while (reader.Read()) {
+                            categories.Add(new {
+                                categoryID = Convert.ToInt32(reader["categoryID"]),
+                                name = reader["name"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return Ok(categories);
+        } catch (SqlException e) {
+            return BadRequest(new { message = "Database error", error = e.Message });
+        }
+    }
+
+    [HttpGet("{id}")]
+    public ActionResult GetProductById(int id) {
+        try {
+            using (DatabaseConnection database = new DatabaseConnection()) {
+                SqlConnection conn = database.OpenConnection();
+                string query = "SELECT * FROM product WHERE productID = @productID";
+                using (SqlCommand command = new SqlCommand(query, conn)) {
+                    command.Parameters.Add("@productID", System.Data.SqlDbType.Int).Value = id;
+                    using (SqlDataReader reader = command.ExecuteReader()) {
+                        if (reader.Read()) {
+                            return Ok(BuildProduct(reader));
+                        }
+                    }
+                }
+            }
+            return NotFound(new { message = "Product not found" });
+        } catch (SqlException e) {
+            return BadRequest(new { message = "Database error", error = e.Message });
+        }
+    }
 }
+

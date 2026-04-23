@@ -8,16 +8,18 @@ import AuthPage from './pages/AuthPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SalePage from './pages/SalePage';
 import SearchPage from './pages/SearchPage';
+import CatalogPage from './pages/CatalogPage';
+
 
 export default function App() {
   const [page, setPage] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const [initialCategoryId, setInitialCategoryId] = useState(null);
 
   const [currentUserId, setCurrentUserId] = useState(null);
   const [cartItems, setCartItems] = useState([]);
-
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     if (currentUserId) {
@@ -32,8 +34,12 @@ export default function App() {
     }
   }, [currentUserId]);
 
-  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const showNotification = (message, type = 'info') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
 
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const syncCartWithDatabase = (productId, quantity) => {
     if (!currentUserId) return;
@@ -51,7 +57,7 @@ export default function App() {
 
   const addToCart = (product, quantity = 1) => {
     if (!currentUserId) {
-      alert("Please login to add to cart!");
+      showNotification("Please login to add to cart!");
       setPage('auth');
       return;
     }
@@ -68,6 +74,7 @@ export default function App() {
       }
       return [...prev, { ...product, quantity: newQuantity, productID: productIDToUse }];
     });
+    showNotification(`${quantity} ${product.name} added to cart!`, "success");
   };
 
   const updateQuantity = (skuOrId, quantity) => {
@@ -101,15 +108,24 @@ export default function App() {
 
   return (
     <>
-      <Header page={page} setPage={setPage} cartCount={cartCount} setSearchQuery={setSearchQuery} />
-      {page === 'home' && <HomePage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
+      <Header page={page} setPage={setPage} cartCount={cartCount} setSearchQuery={setSearchQuery} setInitialCategoryId={setInitialCategoryId} />
+
+      {notification && (
+        <div className={`notification-toast ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
+
+      {page === 'home' && <HomePage setPage={setPage} setSelectedProduct={setSelectedProduct} setInitialCategoryId={setInitialCategoryId} />}
       {page === 'cart' && <CartPage setPage={setPage} cartItems={cartItems} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />}
-      {page === 'auth' && <AuthPage setPage={setPage} setCurrentUserId={setCurrentUserId} />}
+      {page === 'auth' && <AuthPage setPage={setPage} setCurrentUserId={setCurrentUserId} showNotification={showNotification} />}
       {page === 'sale' && <SalePage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
       {page === 'search' && <SearchPage setPage={setPage} setSelectedProduct={setSelectedProduct} searchQuery={searchQuery} />}
+      {page === 'catalog' && <CatalogPage setPage={setPage} setSelectedProduct={setSelectedProduct} initialCategoryId={initialCategoryId} />}
       {page === 'product' && <ProductDetailPage product={selectedProduct} setPage={setPage} addToCart={addToCart} />}
-      {page === 'checkout' && <CheckoutPage setPage={setPage} clearCart={clearCart} />}
+      {page === 'checkout' && <CheckoutPage setPage={setPage} clearCart={clearCart} showNotification={showNotification} />}
       {page !== 'checkout' && <Footer />}
     </>
   );
 }
+
